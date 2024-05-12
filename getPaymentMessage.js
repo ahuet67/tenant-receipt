@@ -19,7 +19,8 @@ function getPaymentMessage(tenantInfo) {
           messageIncludesTenantInfoPayment(
             messageItem,
             tenantInfo.alertMessageId
-          )
+          ) &&
+          messageItem.getDate().getMonth() === TODAY.getMonth()
         ) {
           message = messageItem;
         }
