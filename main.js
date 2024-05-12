@@ -19,11 +19,27 @@ const COMMON_INFOS = {
 
 function main() {
   for (const tenantInfo of TENANT_INFOS) {
-    const paymentMessage = getPaymentMessage(tenantInfo);
-    if (paymentMessage) {
-      const paymentDate = moment(paymentMessage.getDate()).format("DD/MM/YYYY");
-      const receiptFile = generateReceipt(tenantInfo, paymentDate);
-      sendReceipt(receiptFile, tenantInfo.tenantEmail);
+    try {
+      const paymentMessage = getPaymentMessage(tenantInfo);
+      if (paymentMessage) {
+        const paymentDate = moment(paymentMessage.getDate()).format(
+          "DD/MM/YYYY"
+        );
+        const receiptFile = generateReceipt(tenantInfo, paymentDate);
+        sendReceipt(receiptFile, tenantInfo.tenantEmail);
+      } else {
+        GmailApp.sendEmail(
+          ADMIN_EMAIL,
+          `paiement non reçu de ${tenantInfo.tenantName}`,
+          `${tenantInfo.tenantName} n'a pas effectué le paiement du mois de ${COMMON_INFOS.month}`
+        );
+      }
+    } catch (e) {
+      GmailApp.sendEmail(
+        ADMIN_EMAIL,
+        `Erreur pour ${tenantInfo.tenantName}`,
+        `Une erreur est survenue pour ${tenantInfo.tenantName}: ${e}`
+      );
     }
   }
 }

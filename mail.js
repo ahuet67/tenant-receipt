@@ -7,6 +7,7 @@ function sendReceipt(receipt, tenantEmail) {
   GmailApp.sendEmail(tenantEmail, DRAFT_SUBJECT, "", {
     attachments: attachmentsMail,
     htmlBody: body,
+    cc: ADMIN_EMAIL,
   });
 }
 
