@@ -17,31 +17,13 @@ const COMMON_INFOS = {
   year: TODAY.getFullYear(),
 };
 
-const TENANT_INFOS = [
-  {
-    tenantName: "Laverie N.A.M.Y",
-    tenantAddress: "4 rue des Hortensias, 62220 Carvin",
-    rentingAmount: 500,
-    rentingAmountAsText: "cinq cent",
-    rentingChargeAmount: 65,
-    tenantEmail: "huet.alexandre@gmail.com",
-    rentingAddress: "20 rue salvador allende, 62220 Carvin",
-    totalRentingAmount: 500 + 65,
-    paymentDate: moment(
-      new Date(TODAY.getFullYear(), TODAY.getMonth(), 6)
-    ).format("DD/MM/YYYY"),
-    startRentingPeriod: moment(
-      new Date(TODAY.getFullYear(), TODAY.getMonth(), 4)
-    ).format("DD/MM/YYYY"),
-    endRentingPeriod: moment(new Date(TODAY.getFullYear(), TODAY.getMonth(), 4))
-      .add(1, "months")
-      .format("DD/MM/YYYY"),
-  },
-];
-
 function main() {
   for (const tenantInfo of TENANT_INFOS) {
-    const receiptFile = generateReceipt(tenantInfo);
-    sendReceipt(receiptFile, tenantInfo.tenantEmail);
+    const paymentMessage = getPaymentMessage(tenantInfo);
+    if (paymentMessage) {
+      const paymentDate = moment(paymentMessage.getDate()).format("DD/MM/YYYY");
+      const receiptFile = generateReceipt(tenantInfo, paymentDate);
+      sendReceipt(receiptFile, tenantInfo.tenantEmail);
+    }
   }
 }
