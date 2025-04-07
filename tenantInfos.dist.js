@@ -16,5 +16,6 @@ const TENANT_INFOS = [
       .format("DD/MM/YYYY"),
     bankAlertEmail: "TO_REPLACE",
     alertMessageId: "TO_REPLACE",
+    shouldSendTenantReceipt: true,
   },
 ];

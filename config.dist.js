@@ -2,3 +2,4 @@ const DRAFT_SUBJECT = "TO_REPLACE";
 const DRAFT_ID = "TO_REPLACE";
 const TENANT_RECEIPT_FILE_ID = "TO_REPLACE";
 const ADMIN_EMAIL = "TO_REPLACE";
+const DEBUG = true;
