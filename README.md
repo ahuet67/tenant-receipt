@@ -8,6 +8,5 @@ The code is written in appscript and use google drive and gmail.
 ## TODO
 
 - Add CIC bank
-- Add CAF specifications
 - Alert tenant when payment has not been received (a letter should be sent to the tenant maximum 15 days after the payment has been required. So we decided to send an email recall 7 days after the date.)
 - Move to the bin when the process is done

@@ -10,7 +10,9 @@ function interpolateTemplate(body, tenantInfo, paymentDate) {
 }
 
 function generateReceipt(tenantInfo, paymentDate) {
-  const tenantReceiptFile = DriveApp.getFileById(TENANT_RECEIPT_FILE_ID);
+  const tenantReceiptFile = DriveApp.getFileById(
+    tenantInfo.cafAmount ? TENANT_CAF_RECEIPT_FILE_ID : TENANT_RECEIPT_FILE_ID
+  );
   const copyTenantReceiptFile = tenantReceiptFile.makeCopy();
   const copyTenantReceiptFileId = copyTenantReceiptFile.getId();
   const finalTenantReceiptFile = DocumentApp.openById(copyTenantReceiptFileId);
