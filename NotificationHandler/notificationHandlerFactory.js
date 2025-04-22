@@ -5,6 +5,8 @@ function notificationHandlerFactory(message) {
     message.getFrom().includes("nepasrepondre@bcom.nord.banquepopulaire.fr")
   ) {
     return banquePopulaireNotificationHandler();
+  } else if (message.getFrom().includes("noreply@cic.fr")) {
+    return CICNotificationHandler();
   }
 
   return creditAgricoleNotificationHandler();
