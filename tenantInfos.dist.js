@@ -2,6 +2,7 @@ const TENANT_INFOS = [
   {
     tenantName: "TO_REPLACE",
     tenantAddress: "TO_REPLACE",
+    senderName: "TO_REPLACE",
     rentingAmount: 500,
     rentingChargeAmount: 65,
     tenantEmail: "TO_REPLACE",
