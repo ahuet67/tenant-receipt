@@ -1,14 +1,3 @@
-function interpolateTemplate(body, tenantInfo, paymentDate) {
-  for (const [key, value] of Object.entries(tenantInfo)) {
-    body.replaceText(`{{${key}}}`, value);
-  }
-  for (const [key, value] of Object.entries(COMMON_INFOS)) {
-    body.replaceText(`{{${key}}}`, value);
-  }
-
-  body.replaceText(`{{paymentDate}}`, paymentDate);
-}
-
 function generateReceipt(tenantInfo, paymentDate) {
   const tenantReceiptFile = DriveApp.getFileById(
     tenantInfo.cafAmount ? TENANT_CAF_RECEIPT_FILE_ID : TENANT_RECEIPT_FILE_ID
@@ -21,7 +10,7 @@ function generateReceipt(tenantInfo, paymentDate) {
   );
 
   const body = finalTenantReceiptFile.getBody();
-  interpolateTemplate(body, tenantInfo, paymentDate);
+  interpolateTemplate(body, tenantInfo, { paymentDate });
 
   finalTenantReceiptFile.saveAndClose();
   const finalTenantReceiptFileAsPDF = finalTenantReceiptFile.getAs(

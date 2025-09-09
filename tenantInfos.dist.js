@@ -1,5 +1,6 @@
 const TENANT_INFOS = [
   {
+    id: 999,
     tenantName: "TO_REPLACE",
     tenantAddress: "TO_REPLACE",
     senderName: "TO_REPLACE",
