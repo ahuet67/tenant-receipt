@@ -16,10 +16,8 @@ function sendReceipt(receipt, tenantEmail) {
 function getDraftId() {
   var drafts = GmailApp.getDrafts();
   for (var draft of drafts) {
-    const draftId = draft.getId();
     if (draft.getMessage().getSubject() === DRAFT_SUBJECT) {
-      const draftId = draft.getId();
-      Logger.log("draftId " + draftId);
+      Logger.log("draftId " + draft.getId());
     }
   }
 }

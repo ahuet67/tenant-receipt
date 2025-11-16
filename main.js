@@ -20,16 +20,34 @@ const COMMON_INFOS = {
 function main() {
   let errorOccured = false;
   for (const tenantInfo of TENANT_INFOS) {
+    const isTenantShouldHavePaid = moment(TODAY).isAfter(
+      moment(
+        new Date(
+          TODAY.getFullYear(),
+          TODAY.getMonth(),
+          parseInt(tenantInfo.startRentingPeriod.split("/")[0], 10)
+        )
+      )
+    );
+    if (!isTenantShouldHavePaid) {
+      console.log(
+        `Le locataire ${tenantInfo.tenantName} n'est pas censé avoir payé pour le mois de ${COMMON_INFOS.month}`
+      );
+      continue;
+    }
+
     try {
       const paymentMessage = getPaymentMessage(tenantInfo);
-
       if (paymentMessage) {
-        if (tenantInfo.shouldSendTenantReceipt) {
+        if (tenantInfo.shouldSendTenantReceipt && !paymentMessage.isStarred()) {
           const paymentDate = moment(paymentMessage.getDate()).format(
             "DD/MM/YYYY"
           );
           const receiptFile = generateReceipt(tenantInfo, paymentDate);
           sendReceipt(receiptFile, tenantInfo.tenantEmail);
+          if (!DEBUG) {
+            paymentMessage.star();
+          }
         }
       } else {
         sendEmail(
