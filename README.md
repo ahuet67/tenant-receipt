@@ -11,7 +11,8 @@ The code is written in appscript and use google drive and gmail.
 
 ## TODO
 
-- Have to tool to do number to text in french
+- Just mention the bank where payment is received in tenantInfo. the <Bank>NotificationHandler should manage by their own how to catch if the proper amount has been sent in the message
 - Connect the app to airtable instead of config file
-- Alert tenant when payment has not been received (a letter should be sent to the tenant maximum 15 days after the payment has been required. So we decided to send an email recall 7 days after the date.)
+- Send the default of payment file filled to the Virtual Assistant to do the verifications
 - Move to the bin when the process is done
+- Do not move to bin the file when command are executed => share it to AV
