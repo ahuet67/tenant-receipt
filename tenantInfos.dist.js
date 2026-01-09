@@ -9,7 +9,7 @@ const TENANT_INFOS = [
     tenantEmail: "TO_REPLACE",
     rentingAddress: "TO_REPLACE",
     totalRentingAmount: 500 + 65,
-    totalRentingAmountAsText: "sept cent",
+    totalRentingAmountAsText: convertAmountToFrenchText(500 + 65),
     startRentingPeriod: moment(
       new Date(TODAY.getFullYear(), TODAY.getMonth(), 4)
     ).format("DD/MM/YYYY"),
