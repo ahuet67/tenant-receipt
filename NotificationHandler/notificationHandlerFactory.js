@@ -1,12 +1,11 @@
-function notificationHandlerFactory(message) {
-  if (message.getFrom().includes("Services.ccm@ca-norddefrance.fr")) {
-    return creditAgricoleNotificationHandler();
-  } else if (
-    message.getFrom().includes("nepasrepondre@bcom.nord.banquepopulaire.fr")
-  ) {
-    return banquePopulaireNotificationHandler();
-  } else if (message.getFrom().includes("noreply@cic.fr")) {
-    return CICNotificationHandler();
+function notificationHandlerFactory(bankId) {
+  switch (bankId) {
+    case BANK_CIC:
+      return CICNotificationHandler();
+    case BANK_BANQUE_POPULAIRE:
+      return banquePopulaireNotificationHandler();
+    case BANK_CREDIT_AGRICOLE:
+      return creditAgricoleNotificationHandler();
   }
 
   return creditAgricoleNotificationHandler();

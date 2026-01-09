@@ -16,8 +16,7 @@ const TENANT_INFOS = [
     endRentingPeriod: moment(new Date(TODAY.getFullYear(), TODAY.getMonth(), 4))
       .add(1, "months")
       .format("DD/MM/YYYY"),
-    bankAlertEmail: "TO_REPLACE",
-    alertMessageId: "TO_REPLACE",
+    bank: "TO_REPLACE",
     shouldSendTenantReceipt: true,
     cafAmount: undefined,
   },
