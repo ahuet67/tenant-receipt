@@ -1,11 +1,24 @@
 function interpolateTemplate(body, tenantInfo, otherInfos) {
-  for (const [key, value] of Object.entries(tenantInfo)) {
-    body.replaceText(`{{${key}}}`, value);
+  function getTemplateVariables(tenantInfo) {
+    const startRentingPeriod = moment(
+      new Date(TODAY.getFullYear(), TODAY.getMonth(), tenantInfo.paymentDay)
+    );
+    const endRentingPeriod = startRentingPeriod.add(1, "months");
+
+    return {
+      startRentingPeriod: startRentingPeriod.format("DD/MM/YYYY"),
+      endRentingPeriod: endRentingPeriod.format("DD/MM/YYYY"),
+    };
   }
-  for (const [key, value] of Object.entries(COMMON_INFOS)) {
-    body.replaceText(`{{${key}}}`, value);
-  }
-  for (const [key, value] of Object.entries(otherInfos)) {
+
+  const templateVariables = {
+    ...COMMON_INFOS,
+    ...otherInfos,
+    ...tenantInfo,
+    ...getTemplateVariables(tenantInfo),
+  };
+
+  for (const [key, value] of Object.entries(templateVariables)) {
     body.replaceText(`{{${key}}}`, value);
   }
 }
