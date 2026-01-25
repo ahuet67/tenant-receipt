@@ -9,14 +9,14 @@ function doGet() {
 
 /**
  * Load tenants from Airtable
- * @returns {Array} Array of tenant objects with id and tenantName
+ * @returns {Array} Array of tenant objects with id and tenantNames
  */
 async function loadTenants() {
   try {
     const tenants = await fetchTenantData();
     return tenants.map((tenant) => ({
       id: tenant.id,
-      tenantName: tenant.tenantName,
+      tenantNames: tenant.tenantNames,
     }));
   } catch (error) {
     console.error(`Error loading tenants: ${error}`);
@@ -44,13 +44,13 @@ async function generateReceiptCommand(tenantId) {
 
   const paymentDate = moment(TODAY).format("DD/MM/YYYY");
   console.log(
-    `Génération d'une quittance pour ${selectedTenant.tenantName} avec la date de paiement: ${paymentDate}`,
+    `Génération d'une quittance pour ${selectedTenant.tenantNames} avec la date de paiement: ${paymentDate}`,
   );
 
   try {
     const receiptFile = generateReceipt(selectedTenant, paymentDate);
     console.log(
-      `Quittance générée avec succès pour ${selectedTenant.tenantName}`,
+      `Quittance générée avec succès pour ${selectedTenant.tenantNames}`,
     );
     return receiptFile;
   } catch (error) {
@@ -80,13 +80,13 @@ async function generateUnpaidRentCommand(tenantId) {
   }
 
   console.log(
-    `Génération d'un avis de loyer impayé pour ${selectedTenant.tenantName}`,
+    `Génération d'un avis de loyer impayé pour ${selectedTenant.tenantNames}`,
   );
 
   try {
     const unpaidRentFile = generateUnpaidRent(selectedTenant);
     console.log(
-      `Avis de loyer impayé généré avec succès pour ${selectedTenant.tenantName}`,
+      `Avis de loyer impayé généré avec succès pour ${selectedTenant.tenantNames}`,
     );
     return unpaidRentFile;
   } catch (error) {

@@ -11,6 +11,7 @@ function interpolateTemplate(body, tenantInfo, otherInfos) {
       totalRentingAmountAsText: convertAmountToFrenchText(
         tenantInfo.totalRentingAmount,
       ),
+      tenantNames: tenantInfo.tenantNames.join("\n"),
     };
   }
 

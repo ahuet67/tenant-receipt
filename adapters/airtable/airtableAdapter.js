@@ -160,7 +160,7 @@ function transformAirtableRecord(record) {
     if (!mappedBankCode) {
       throw new Error(
         `Bank name "${rawBankName}" not found in bank mapping for tenant "${
-          transformedData.tenantName
+          transformedData.tenantNames
         }". Available banks: ${Object.keys(BANK_NAME_MAPPING).join(", ")}`,
       );
     }
@@ -172,7 +172,7 @@ function transformAirtableRecord(record) {
 
     if (isNaN(paymentDay) || paymentDay < 1 || paymentDay > 31) {
       throw new Error(
-        `Invalid payment day "${transformedData.paymentDay}" for tenant "${transformedData.tenantName}". Must be a number between 1 and 31.`,
+        `Invalid payment day "${transformedData.paymentDay}" for tenant "${transformedData.tenantNames}". Must be a number between 1 and 31.`,
       );
     }
 

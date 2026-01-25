@@ -223,7 +223,7 @@
         tenants.forEach(function (tenant) {
           const option = document.createElement("option");
           option.value = tenant.id;
-          option.textContent = tenant.tenantName;
+          option.textContent = tenant.tenantNames;
           tenantSelect.appendChild(option);
         });
 

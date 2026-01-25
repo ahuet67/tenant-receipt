@@ -3,7 +3,7 @@
  * Maps Airtable column names to application field names
  */
 const AIRTABLE_FIELD_MAPPING = {
-  "Prénoms et noms des locataires": "tenantName",
+  "Prénoms et noms des locataires": "tenantNames",
   "Adresse complète": "tenantAddress",
   Emails: "tenantEmail",
   "Adresse du bailleur": "rentingAddress",
@@ -18,7 +18,7 @@ const AIRTABLE_FIELD_MAPPING = {
 
 // List of required fields that must be present in every Airtable record
 const REQUIRED_FIELDS = [
-  "tenantName",
+  "tenantNames",
   "tenantAddress",
   "tenantEmail",
   "rentingAddress",

@@ -32,7 +32,7 @@ async function main() {
     );
     if (!isTenantShouldHavePaid) {
       console.log(
-        `Le locataire ${tenantInfo.tenantName} n'est pas censé avoir payé pour le mois de ${COMMON_INFOS.month}`,
+        `Le locataire ${tenantInfo.tenantNames} n'est pas censé avoir payé pour le mois de ${COMMON_INFOS.month}`,
       );
       continue;
     }
@@ -53,16 +53,16 @@ async function main() {
       } else {
         sendEmail(
           ADMIN_EMAIL,
-          `paiement non reçu de ${tenantInfo.tenantName}`,
-          `${tenantInfo.tenantName} n'a pas effectué le paiement du mois de ${COMMON_INFOS.month}`,
+          `paiement non reçu de ${tenantInfo.tenantNames}`,
+          `${tenantInfo.tenantNames} n'a pas effectué le paiement du mois de ${COMMON_INFOS.month}`,
         );
         errorOccured = true;
       }
     } catch (e) {
       sendEmail(
         ADMIN_EMAIL,
-        `Erreur pour ${tenantInfo.tenantName}`,
-        `Une erreur est survenue pour ${tenantInfo.tenantName}: ${e}`,
+        `Erreur pour ${tenantInfo.tenantNames}`,
+        `Une erreur est survenue pour ${tenantInfo.tenantNames}: ${e}`,
       );
       errorOccured = true;
     }
