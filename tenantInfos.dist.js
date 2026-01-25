@@ -9,13 +9,6 @@ const TENANT_INFOS = [
     tenantEmail: "TO_REPLACE",
     rentingAddress: "TO_REPLACE",
     totalRentingAmount: 500 + 65,
-    totalRentingAmountAsText: convertAmountToFrenchText(500 + 65),
-    startRentingPeriod: moment(
-      new Date(TODAY.getFullYear(), TODAY.getMonth(), 4)
-    ).format("DD/MM/YYYY"),
-    endRentingPeriod: moment(new Date(TODAY.getFullYear(), TODAY.getMonth(), 4))
-      .add(1, "months")
-      .format("DD/MM/YYYY"),
     bank: "TO_REPLACE",
     shouldSendTenantReceipt: true,
     cafAmount: undefined,

@@ -1,13 +1,16 @@
 function interpolateTemplate(body, tenantInfo, otherInfos) {
   function getTemplateVariables(tenantInfo) {
     const startRentingPeriod = moment(
-      new Date(TODAY.getFullYear(), TODAY.getMonth(), tenantInfo.paymentDay)
+      new Date(TODAY.getFullYear(), TODAY.getMonth(), tenantInfo.paymentDay),
     );
     const endRentingPeriod = startRentingPeriod.add(1, "months");
 
     return {
       startRentingPeriod: startRentingPeriod.format("DD/MM/YYYY"),
       endRentingPeriod: endRentingPeriod.format("DD/MM/YYYY"),
+      totalRentingAmountAsText: convertAmountToFrenchText(
+        tenantInfo.totalRentingAmount,
+      ),
     };
   }
 

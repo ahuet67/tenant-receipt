@@ -12,7 +12,7 @@ const AIRTABLE_FIELD_MAPPING = {
   Bailleur: "senderName",
   "Banque de réception du virement": "bank",
   "Jour de paiement": "dayOfPayment",
-  "Montant des aides": "cafAmount",
+  "Montant des aides CAF": "cafAmount",
   "Demande de réception de quittance": "shouldSendTenantReceipt",
 };
 

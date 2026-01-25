@@ -12,19 +12,14 @@
  */
 async function fetchTenantData() {
   try {
-    // Step 1: Fetch records from Airtable
     const airtableRecords = await fetchAirtableRecords();
-
-    // Step 2: Filter only active records (Statut === "Actif")
     const activeRecords = filterActiveRecords(airtableRecords);
-
-    // Step 3: Transform records to application schema
     const tenantDataArray = activeRecords.map((record) =>
-      transformAirtableRecord(record)
+      transformAirtableRecord(record),
     );
 
     console.log(
-      `Successfully fetched and transformed ${tenantDataArray.length} active tenant(s) from Airtable`
+      `Successfully fetched and transformed ${tenantDataArray.length} active tenant(s) from Airtable`,
     );
 
     return tenantDataArray;
@@ -63,7 +58,7 @@ async function fetchAirtableRecords() {
     return allRecords;
   } catch (error) {
     throw new Error(
-      `Failed to fetch Airtable records: ${error.message}. Ensure AIRTABLE_API_KEY is valid and Airtable is accessible.`
+      `Failed to fetch Airtable records: ${error.message}. Ensure AIRTABLE_API_KEY is valid and Airtable is accessible.`,
     );
   }
 }
@@ -89,7 +84,7 @@ async function makeAirtableRequest(url) {
     return response.getContentText();
   } catch (error) {
     throw new Error(
-      `HTTP request to Airtable failed: ${error.message}. Check network connectivity and API key.`
+      `HTTP request to Airtable failed: ${error.message}. Check network connectivity and API key.`,
     );
   }
 }
@@ -107,7 +102,7 @@ function filterActiveRecords(records) {
   });
 
   console.log(
-    `Filtered ${activeRecords.length} active record(s) from ${records.length} total record(s)`
+    `Filtered ${activeRecords.length} active record(s) from ${records.length} total record(s)`,
   );
 
   return activeRecords;
@@ -142,7 +137,7 @@ function transformAirtableRecord(record) {
           (typeof value === "string" && value.trim() === "")
         ) {
           throw new Error(
-            `Required field "${appFieldName}" (mapped to "${applicationFieldName}") is missing or empty in record ${record.id}`
+            `Required field "${appFieldName}" (mapped to "${applicationFieldName}") is missing or empty in record ${record.id}`,
           );
         }
       }
@@ -166,7 +161,7 @@ function transformAirtableRecord(record) {
       throw new Error(
         `Bank name "${rawBankName}" not found in bank mapping for tenant "${
           transformedData.tenantName
-        }". Available banks: ${Object.keys(BANK_NAME_MAPPING).join(", ")}`
+        }". Available banks: ${Object.keys(BANK_NAME_MAPPING).join(", ")}`,
       );
     }
 
@@ -177,37 +172,19 @@ function transformAirtableRecord(record) {
 
     if (isNaN(dayOfPayment) || dayOfPayment < 1 || dayOfPayment > 31) {
       throw new Error(
-        `Invalid payment day "${transformedData.dayOfPayment}" for tenant "${transformedData.tenantName}". Must be a number between 1 and 31.`
+        `Invalid payment day "${transformedData.dayOfPayment}" for tenant "${transformedData.tenantName}". Must be a number between 1 and 31.`,
       );
     }
 
-    // Compute renting period dates
-    const startDate = new Date(
-      TODAY.getFullYear(),
-      TODAY.getMonth(),
-      dayOfPayment
-    );
-    const endDate = new Date(
-      TODAY.getFullYear(),
-      TODAY.getMonth() + 1,
-      dayOfPayment
-    );
-
-    transformedData.startRentingPeriod = moment(startDate).format("DD/MM/YYYY");
-    transformedData.endRentingPeriod = moment(endDate).format("DD/MM/YYYY");
-
-    // Add record ID from Airtable
     transformedData.id = record.id;
 
-    // Add computed total renting amount
     transformedData.totalRentingAmount =
-      transformedData.rentingAmount + transformedData.rentingChargeAmount;
-
-    // Note: totalRentingAmountAsText and other template-specific fields
-    // are computed during template generation in interpolateTemplate.js
+      transformedData.rentingAmount +
+        transformedData.rentingChargeAmount -
+        transformedData.cafAmount || 0;
 
     console.log(
-      `Successfully transformed tenant: ${transformedData.tenantName}`
+      `Successfully transformed tenant: ${JSON.stringify(transformedData)}`,
     );
 
     return transformedData;
@@ -224,14 +201,14 @@ function transformAirtableRecord(record) {
  */
 function validateMappingConfiguration() {
   const missingRequiredFields = REQUIRED_FIELDS.filter(
-    (field) => !Object.values(AIRTABLE_FIELD_MAPPING).includes(field)
+    (field) => !Object.values(AIRTABLE_FIELD_MAPPING).includes(field),
   );
 
   if (missingRequiredFields.length > 0) {
     throw new Error(
       `Missing required fields in AIRTABLE_FIELD_MAPPING: ${missingRequiredFields.join(
-        ", "
-      )}`
+        ", ",
+      )}`,
     );
   }
 

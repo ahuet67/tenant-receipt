@@ -4,6 +4,6 @@
  */
 const BANK_NAME_MAPPING = {
   "Banque populaire": "banquePopulaire",
-  "Crédit Agricole": "creditAgricole",
+  "Crédit agricole": "creditAgricole",
   CIC: "cic",
 };
