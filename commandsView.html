@@ -1,0 +1,342 @@
+<!doctype html>
+<html>
+  <head>
+    <base target="_top" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 30px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+      }
+
+      select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      button {
+        flex: 1;
+        padding: 12px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .btn-receipt {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .btn-receipt:hover:not(:disabled) {
+        background-color: #45a049;
+      }
+
+      .btn-unpaid {
+        background-color: #f44336;
+        color: white;
+      }
+
+      .btn-unpaid:hover:not(:disabled) {
+        background-color: #da190b;
+      }
+
+      .spinner {
+        display: none;
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .spinner.active {
+        display: block;
+      }
+
+      .spinner::after {
+        content: "⏳";
+        font-size: 24px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .message {
+        padding: 12px;
+        margin: 20px 0;
+        border-radius: 4px;
+        display: none;
+      }
+
+      .message.active {
+        display: block;
+      }
+
+      .message.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Gestion des Quittances de Loyer</h1>
+
+    <div class="form-group">
+      <label for="tenantSelect">Sélectionner un locataire:</label>
+      <select id="tenantSelect" disabled>
+        <option value="">Chargement des locataires...</option>
+      </select>
+    </div>
+
+    <div class="button-group">
+      <button id="btnReceipt" class="btn-receipt" disabled>
+        Générer une quittance
+      </button>
+      <button id="btnUnpaid" class="btn-unpaid" disabled>
+        Générer une lettre de loyer impayé
+      </button>
+    </div>
+
+    <div id="spinner" class="spinner"></div>
+    <div id="message" class="message"></div>
+
+    <script>
+      // UI elements
+      const tenantSelect = document.getElementById("tenantSelect");
+      const btnReceipt = document.getElementById("btnReceipt");
+      const btnUnpaid = document.getElementById("btnUnpaid");
+      const spinner = document.getElementById("spinner");
+      const messageDiv = document.getElementById("message");
+
+      // State management
+      let isProcessing = false;
+
+      /**
+       * Show loading spinner
+       */
+      function showSpinner() {
+        spinner.classList.add("active");
+      }
+
+      /**
+       * Hide loading spinner
+       */
+      function hideSpinner() {
+        spinner.classList.remove("active");
+      }
+
+      /**
+       * Show message to user
+       * @param {string} text - Message text
+       * @param {string} type - Message type ('success' or 'error')
+       */
+      function showMessage(text, type) {
+        messageDiv.textContent = text;
+        messageDiv.className = "message active " + type;
+      }
+
+      /**
+       * Hide message
+       */
+      function hideMessage() {
+        messageDiv.classList.remove("active");
+      }
+
+      /**
+       * Enable/disable buttons during processing
+       * @param {boolean} disabled - Whether to disable buttons
+       */
+      function setButtonsDisabled(disabled) {
+        btnReceipt.disabled = disabled;
+        btnUnpaid.disabled = disabled;
+        isProcessing = disabled;
+      }
+
+      /**
+       * Populate tenant dropdown with loaded data
+       * @param {Array} tenants - Array of tenant objects
+       */
+      function populateTenantSelect(tenants) {
+        tenantSelect.innerHTML = "";
+
+        if (!tenants || tenants.length === 0) {
+          const option = document.createElement("option");
+          option.value = "";
+          option.textContent = "Aucun locataire actif trouvé";
+          tenantSelect.appendChild(option);
+          return;
+        }
+
+        // Add default option
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "Sélectionner un locataire...";
+        tenantSelect.appendChild(defaultOption);
+
+        // Add tenant options
+        tenants.forEach(function (tenant) {
+          const option = document.createElement("option");
+          option.value = tenant.id;
+          option.textContent = tenant.tenantName;
+          tenantSelect.appendChild(option);
+        });
+
+        tenantSelect.disabled = false;
+        setButtonsDisabled(false);
+      }
+
+      /**
+       * Load tenants on page load
+       */
+      function loadTenantsOnPageLoad() {
+        showSpinner();
+        hideMessage();
+
+        google.script.run
+          .withSuccessHandler(function (tenants) {
+            hideSpinner();
+            populateTenantSelect(tenants);
+            showMessage("Locataires chargés avec succès", "success");
+          })
+          .withFailureHandler(function (error) {
+            hideSpinner();
+            showMessage(
+              "Erreur lors du chargement des locataires: " + error.message,
+              "error",
+            );
+            tenantSelect.innerHTML =
+              '<option value="">Erreur de chargement</option>';
+          })
+          .loadTenants();
+      }
+
+      /**
+       * Generate receipt for selected tenant
+       */
+      function generateReceipt() {
+        const tenantId = tenantSelect.value;
+
+        if (!tenantId) {
+          showMessage("Veuillez sélectionner un locataire", "error");
+          return;
+        }
+
+        if (isProcessing) {
+          return;
+        }
+
+        setButtonsDisabled(true);
+        showSpinner();
+        hideMessage();
+
+        google.script.run
+          .withSuccessHandler(function (result) {
+            hideSpinner();
+            setButtonsDisabled(false);
+            showMessage("Quittance générée avec succès", "success");
+          })
+          .withFailureHandler(function (error) {
+            hideSpinner();
+            setButtonsDisabled(false);
+            showMessage(
+              "Erreur lors de la génération de la quittance: " + error.message,
+              "error",
+            );
+          })
+          .generateReceiptCommand(tenantId);
+      }
+
+      /**
+       * Generate unpaid rent notice for selected tenant
+       */
+      function generateUnpaidRent() {
+        const tenantId = tenantSelect.value;
+
+        if (!tenantId) {
+          showMessage("Veuillez sélectionner un locataire", "error");
+          return;
+        }
+
+        if (isProcessing) {
+          return;
+        }
+
+        setButtonsDisabled(true);
+        showSpinner();
+        hideMessage();
+
+        google.script.run
+          .withSuccessHandler(function (result) {
+            hideSpinner();
+            setButtonsDisabled(false);
+            showMessage(
+              "Lettre de loyer impayé générée avec succès",
+              "success",
+            );
+          })
+          .withFailureHandler(function (error) {
+            hideSpinner();
+            setButtonsDisabled(false);
+            showMessage(
+              "Erreur lors de la génération de la lettre: " + error.message,
+              "error",
+            );
+          })
+          .generateUnpaidRentCommand(tenantId);
+      }
+
+      // Event listeners
+      btnReceipt.addEventListener("click", generateReceipt);
+      btnUnpaid.addEventListener("click", generateUnpaidRent);
+
+      // Load tenants when page loads
+      window.onload = loadTenantsOnPageLoad;
+    </script>
+  </body>
+</html>

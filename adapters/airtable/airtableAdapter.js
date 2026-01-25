@@ -168,11 +168,11 @@ function transformAirtableRecord(record) {
     transformedData.bank = mappedBankCode;
 
     // Compute date fields
-    const dayOfPayment = parseInt(transformedData.dayOfPayment, 10);
+    const paymentDay = parseInt(transformedData.paymentDay, 10);
 
-    if (isNaN(dayOfPayment) || dayOfPayment < 1 || dayOfPayment > 31) {
+    if (isNaN(paymentDay) || paymentDay < 1 || paymentDay > 31) {
       throw new Error(
-        `Invalid payment day "${transformedData.dayOfPayment}" for tenant "${transformedData.tenantName}". Must be a number between 1 and 31.`,
+        `Invalid payment day "${transformedData.paymentDay}" for tenant "${transformedData.tenantName}". Must be a number between 1 and 31.`,
       );
     }
 
@@ -180,8 +180,8 @@ function transformAirtableRecord(record) {
 
     transformedData.totalRentingAmount =
       transformedData.rentingAmount +
-        transformedData.rentingChargeAmount -
-        transformedData.cafAmount || 0;
+      transformedData.rentingChargeAmount -
+      (transformedData.cafAmount || 0);
 
     console.log(
       `Successfully transformed tenant: ${JSON.stringify(transformedData)}`,

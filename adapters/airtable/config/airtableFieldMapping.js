@@ -11,7 +11,7 @@ const AIRTABLE_FIELD_MAPPING = {
   Charges: "rentingChargeAmount",
   Bailleur: "senderName",
   "Banque de réception du virement": "bank",
-  "Jour de paiement": "dayOfPayment",
+  "Jour de paiement": "paymentDay",
   "Montant des aides CAF": "cafAmount",
   "Demande de réception de quittance": "shouldSendTenantReceipt",
 };
@@ -26,7 +26,7 @@ const REQUIRED_FIELDS = [
   "rentingChargeAmount",
   "senderName",
   "bank",
-  "dayOfPayment",
+  "paymentDay",
 ];
 
 // List of optional fields
