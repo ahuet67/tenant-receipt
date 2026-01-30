@@ -1,12 +1,12 @@
 var momentLib = eval(
   UrlFetchApp.fetch(
-    "https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"
-  ).getContentText()
+    "https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js",
+  ).getContentText(),
 );
 var localLib = eval(
   UrlFetchApp.fetch(
-    "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/fr.js"
-  ).getContentText()
+    "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/fr.js",
+  ).getContentText(),
 );
 
 const TODAY = new Date();
@@ -17,21 +17,22 @@ const COMMON_INFOS = {
   year: TODAY.getFullYear(),
 };
 
-function main() {
+async function main() {
   let errorOccured = false;
-  for (const tenantInfo of TENANT_INFOS) {
+  const tenantInfos = await fetchTenantData();
+  for (const tenantInfo of tenantInfos) {
     const isTenantShouldHavePaid = moment(TODAY).isAfter(
       moment(
         new Date(
           TODAY.getFullYear(),
           TODAY.getMonth(),
-          parseInt(tenantInfo.startRentingPeriod.split("/")[0], 10)
-        )
-      )
+          parseInt(tenantInfo.paymentDay),
+        ),
+      ),
     );
     if (!isTenantShouldHavePaid) {
       console.log(
-        `Le locataire ${tenantInfo.tenantName} n'est pas censé avoir payé pour le mois de ${COMMON_INFOS.month}`
+        `Le locataire ${tenantInfo.tenantNames} n'est pas censé avoir payé pour le mois de ${COMMON_INFOS.month}`,
       );
       continue;
     }
@@ -41,7 +42,7 @@ function main() {
       if (paymentMessage) {
         if (tenantInfo.shouldSendTenantReceipt && !paymentMessage.isStarred()) {
           const paymentDate = moment(paymentMessage.getDate()).format(
-            "DD/MM/YYYY"
+            "DD/MM/YYYY",
           );
           const receiptFile = generateReceipt(tenantInfo, paymentDate);
           sendReceipt(receiptFile, tenantInfo.tenantEmail);
@@ -52,16 +53,16 @@ function main() {
       } else {
         sendEmail(
           ADMIN_EMAIL,
-          `paiement non reçu de ${tenantInfo.tenantName}`,
-          `${tenantInfo.tenantName} n'a pas effectué le paiement du mois de ${COMMON_INFOS.month}`
+          `paiement non reçu de ${tenantInfo.tenantNames}`,
+          `${tenantInfo.tenantNames} n'a pas effectué le paiement du mois de ${COMMON_INFOS.month}`,
         );
         errorOccured = true;
       }
     } catch (e) {
       sendEmail(
         ADMIN_EMAIL,
-        `Erreur pour ${tenantInfo.tenantName}`,
-        `Une erreur est survenue pour ${tenantInfo.tenantName}: ${e}`
+        `Erreur pour ${tenantInfo.tenantNames}`,
+        `Une erreur est survenue pour ${tenantInfo.tenantNames}: ${e}`,
       );
       errorOccured = true;
     }
@@ -71,7 +72,7 @@ function main() {
     sendEmail(
       ADMIN_EMAIL,
       `Tous les loyers ont été reçu`,
-      `Tous les loyers ont été reçu pour le mois de ${COMMON_INFOS.month}`
+      `Tous les loyers ont été reçu pour le mois de ${COMMON_INFOS.month}`,
     );
   }
 }

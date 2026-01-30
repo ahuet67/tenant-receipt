@@ -11,8 +11,6 @@ The code is written in appscript and use google drive and gmail.
 
 ## TODO
 
-- Just mention the bank where payment is received in tenantInfo. the <Bank>NotificationHandler should manage by their own how to catch if the proper amount has been sent in the message
-- Connect the app to airtable instead of config file
-- Send the default of payment file filled to the Virtual Assistant to do the verifications
-- Move to the bin when the process is done
-- Do not move to bin the file when command are executed => share it to AV
+- When a record is invalid, then notify the owner for invalid entry for it but do not crash everything
+- for the View to launch command use contract name instead of tenant name (some tenant have multiple contracts)
+- Do not move to bin the file when command are executed => share it to Virtual Assistant
