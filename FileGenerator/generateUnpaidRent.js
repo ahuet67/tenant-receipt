@@ -1,3 +1,4 @@
+// return a DocumentApp object with the template filled in with tenantInfo
 function generateUnpaidRent(tenantInfo) {
   const file = DriveApp.getFileById(
     tenantInfo.cafAmount ? UNPAID_CAF_RENT_FILE_ID : UNPAID_RENT_FILE_ID,
@@ -16,7 +17,6 @@ function generateUnpaidRent(tenantInfo) {
   interpolateTemplate(body, tenantInfo, { requestedPaymentDate });
 
   finalFile.saveAndClose();
-  const finalFileAsPDF = finalFile.getAs(MimeType.PDF);
-  copyFile.setTrashed(true);
-  return finalFileAsPDF;
+  copyFile.moveTo(DriveApp.getFolderById(SHARED_FOLDER_ID));
+  return finalFile;
 }

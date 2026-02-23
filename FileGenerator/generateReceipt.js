@@ -16,6 +16,6 @@ function generateReceipt(tenantInfo, paymentDate) {
   const finalTenantReceiptFileAsPDF = finalTenantReceiptFile.getAs(
     MimeType.PDF,
   );
-  copyTenantReceiptFile.setTrashed(true);
+  copyTenantReceiptFile.moveTo(DriveApp.getFolderById(SHARED_FOLDER_ID));
   return finalTenantReceiptFileAsPDF;
 }
