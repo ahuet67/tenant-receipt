@@ -19,6 +19,7 @@ const COMMON_INFOS = {
 
 async function main() {
   let errorOccured = false;
+  const otherAdminEmails = ADMIN_EMAILS.splice(1).join(",");
   const tenantInfos = await fetchTenantData();
   for (const tenantInfo of tenantInfos) {
     const isTenantShouldHavePaid = moment(TODAY).isAfter(
@@ -52,17 +53,23 @@ async function main() {
         }
       } else {
         sendEmail(
-          ADMIN_EMAIL,
+          ADMIN_EMAILS[0],
           `paiement non reçu de ${tenantInfo.tenantNames}`,
           `${tenantInfo.tenantNames} n'a pas effectué le paiement du mois de ${COMMON_INFOS.month}`,
+          {
+            cc: otherAdminEmails,
+          },
         );
         errorOccured = true;
       }
     } catch (e) {
       sendEmail(
-        ADMIN_EMAIL,
+        ADMIN_EMAILS[0],
         `Erreur pour ${tenantInfo.tenantNames}`,
         `Une erreur est survenue pour ${tenantInfo.tenantNames}: ${e}`,
+        {
+          cc: otherAdminEmails,
+        },
       );
       errorOccured = true;
     }
@@ -70,9 +77,12 @@ async function main() {
 
   if (!errorOccured) {
     sendEmail(
-      ADMIN_EMAIL,
+      ADMIN_EMAILS[0],
       `Tous les loyers ont été reçu`,
       `Tous les loyers ont été reçu pour le mois de ${COMMON_INFOS.month}`,
+      {
+        cc: otherAdminEmails,
+      },
     );
   }
 }

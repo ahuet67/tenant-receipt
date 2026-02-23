@@ -9,7 +9,7 @@ function sendReceipt(receipt, tenantEmail) {
   sendEmail(tenantEmail, DRAFT_SUBJECT, "", {
     attachments: attachmentsMail,
     htmlBody: body,
-    cc: ADMIN_EMAIL,
+    cc: ADMIN_EMAILS.join(","),
   });
 }
 

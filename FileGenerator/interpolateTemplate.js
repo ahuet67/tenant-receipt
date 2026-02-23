@@ -3,7 +3,7 @@ function interpolateTemplate(body, tenantInfo, otherInfos) {
     const startRentingPeriod = moment(
       new Date(TODAY.getFullYear(), TODAY.getMonth(), tenantInfo.paymentDay),
     );
-    const endRentingPeriod = startRentingPeriod.add(1, "months");
+    const endRentingPeriod = startRentingPeriod.clone().add(1, "months");
 
     return {
       startRentingPeriod: startRentingPeriod.format("DD/MM/YYYY"),
