@@ -22,6 +22,7 @@ async function main() {
   const otherAdminEmails = ADMIN_EMAILS.splice(1).join(",");
   const tenantInfos = await fetchTenantData();
   for (const tenantInfo of tenantInfos) {
+    const tenantIdentification = `${tenantInfo.tenantNames} louant au ${tenantInfo.tenantAddress}`
     const isTenantShouldHavePaid = moment(TODAY).isAfter(
       moment(
         new Date(
@@ -33,7 +34,7 @@ async function main() {
     );
     if (!isTenantShouldHavePaid) {
       console.log(
-        `Le locataire ${tenantInfo.tenantNames} n'est pas censé avoir payé pour le mois de ${COMMON_INFOS.month}`,
+        `Le locataire ${tenantIdentification} n'est pas censé avoir payé pour le mois de ${COMMON_INFOS.month}`,
       );
       continue;
     }
@@ -54,8 +55,8 @@ async function main() {
       } else {
         sendEmail(
           ADMIN_EMAILS[0],
-          `paiement non reçu de ${tenantInfo.tenantNames}`,
-          `${tenantInfo.tenantNames} n'a pas effectué le paiement du mois de ${COMMON_INFOS.month}`,
+          `paiement non reçu de ${tenantIdentification} sur la banque ${tenantInfo.bank}`,
+          `${tenantIdentification} n'a pas effectué le paiement du mois de ${COMMON_INFOS.month}`,
           {
             cc: otherAdminEmails,
           },
@@ -65,8 +66,8 @@ async function main() {
     } catch (e) {
       sendEmail(
         ADMIN_EMAILS[0],
-        `Erreur pour ${tenantInfo.tenantNames}`,
-        `Une erreur est survenue pour ${tenantInfo.tenantNames}: ${e}`,
+        `Erreur pour ${tenantIdentification}`,
+        `Une erreur est survenue pour ${tenantIdentification}: ${e}`,
         {
           cc: otherAdminEmails,
         },
